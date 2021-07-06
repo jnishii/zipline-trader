@@ -55,14 +55,24 @@ RUN mkdir ${PROJECT_DIR} \
 WORKDIR /ta-lib
 
 RUN pip install 'numpy>=1.11.1,<2.0.0' \
-  && pip install 'scipy>=0.17.1,<1.0.0' \
+  && pip install 'scipy==1.1.0' \
   && pip install 'pandas>=0.18.1,<1.0.0' \
   && ./configure --prefix=/usr \
   && make \
-  && make install \
-  && pip install TA-Lib \
+  && make install
+#    && pip install 'scipy>=0.17.1,<1.0.0' \
+
+
+RUN pip install TA-Lib \
   && pip install matplotlib \
-  && pip install jupyter
+  && pip install jupyter \
+  && pip install bcolz \
+  && pip install watermark
+
+RUN python -m pip install yfinance \
+    && python -m pip install pyfolio \
+    && python -m pip install datetime
+
 
 #
 # This is then only file we need from source to remain in the
@@ -70,6 +80,7 @@ RUN pip install 'numpy>=1.11.1,<2.0.0' \
 #
 
 ADD ./etc/docker_cmd.sh /
+ADD ./etc/jupyter.sh /
 
 #
 # make port available. /zipline is made a volume
@@ -90,4 +101,5 @@ RUN pip install -e . --default-timeout=200
 #
 
 WORKDIR ${PROJECT_DIR}
-CMD /docker_cmd.sh
+#CMD /docker_cmd.sh
+CMD /jupyter.sh
