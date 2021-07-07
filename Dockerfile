@@ -69,9 +69,18 @@ RUN pip install TA-Lib \
   && pip install bcolz \
   && pip install watermark
 
-RUN python -m pip install yfinance \
-    && python -m pip install pyfolio \
-    && python -m pip install datetime
+COPY requirements_financial.txt /tmp
+
+RUN python -m pip install -r /tmp/requirements_financial.txt
+
+# 
+# Factors and Alphalens
+# https://zipline-trader.readthedocs.io/en/latest/research.html
+#
+
+
+RUN python -m pip install git+https://github.com/shlomikushchi/alphalens#egg=alphalens
+ 
 
 
 #
